@@ -13,7 +13,7 @@ def test_add_files_to_zip_via_shutil():
 
 def test_add_files_to_zip_via_zipfile():
     if os.path.isfile('hello.zip'):
-        shutil.rmtree(os.path.join(CURRENT_DIR, "files"))
+        shutil.rmtree(os.path.join(CURRENT_DIR, "resources"))
 
     with ZipFile(f'{TMP_DIR}\hello.zip', mode='w', compression=ZIP_STORED) as zip_file:
         for file in files_dir:
