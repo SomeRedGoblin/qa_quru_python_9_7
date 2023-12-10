@@ -4,6 +4,7 @@ import shutil
 from zipfile import ZipFile, ZIP_STORED
 
 from PyPDF2 import PdfReader
+from openpyxl import load_workbook
 
 from conftest import TMP_DIR, TEST_DATA_DIR, CURRENT_DIR
 
@@ -67,3 +68,23 @@ def test_read_pdf_file():
     text = page.extract_text()
     print(text)
     assert text.__contains__('Congratulations, your comput er is equipped with a PDF (Portable Document Format)')
+
+
+def test_read_xlsx_file():
+    # Проверка не распаковывая
+    with ZipFile(f'{TMP_DIR}\hello.zip') as zip_file:
+        print(zip_file.namelist())
+        text = zip_file.read('file_example_XLSX_10.xlsx')
+
+        assert text.__len__() == 5425
+
+    # Провверка после распаковки
+    with ZipFile(f'{TMP_DIR}\hello.zip') as zip_file:
+        zip_file.extract('file_example_XLSX_10.xlsx', path="tmp")
+
+    # открываем файл
+    workbook = load_workbook('tmp/file_example_XLSX_10.xlsx')
+    sheet = workbook.active
+    assert sheet.max_column == 8
+    assert sheet.max_row == 10
+    assert sheet.cell(row=3, column=2).value == "Mara"
